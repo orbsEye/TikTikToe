@@ -2,8 +2,7 @@
 import { ref, onMounted, computed } from 'vue'
 import type { MaybeElement } from '@vueuse/core'
 import { useAnimate } from '@vueuse/core'
-// import { stringify } from '@vueuse/docs-utils'
-import ConfettiExplosion from "vue-confetti-explosion";
+import ConfettiExplosion from "vue-confetti-explosion"
 import { reactive, shallowRef } from 'vue'
 
 const el = shallowRef<MaybeElement>()
@@ -134,8 +133,16 @@ onMounted( () => {
 <template>
   <div class="min-h-screen flex flex-col items-center justify-center bg-slate-200">
     <h1 ref="el" class="text-6xl font-bold text-center pb-1.5">Tik Tik Toe</h1>
-    <ConfettiExplosion v-if="hasWinner" :particleCount="300" :force="0.5" :colors="['var(--yellow)', 'var(--red)', '#000']" />
-    <p v-if="hasWinner" class="text-2xl font-bold text-center pb-1.5">Player {{ winner }} wins</p>
+    <ConfettiExplosion 
+      v-if="hasWinner"
+      :particleCount="300" 
+      :force="0.5" 
+      :colors="['var(--yellow)', 'var(--red)', '#000']" />
+    <p 
+      v-if="hasWinner" 
+      class="text-2xl font-bold text-center pb-1.5">
+      Player {{ winner }} wins
+    </p>
     <div class="grid grid-cols-3 gap-4 mb-4">
       <div 
         v-for="(cell, index) in board" 
