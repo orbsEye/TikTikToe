@@ -40,12 +40,12 @@ const text = JSON.stringify(reactive({
   pending,
 }))
 
-
 const board = ref(Array(9).fill(null))
 const winningCombination = ref<number[]>([])
 const player = ref(true)
 const winner = ref('')
 const hasWinner = ref(false)
+const scores = ref<{player1: number, player2: number}>({player1: 0, player2: 0})
 const handleClick = (index: number) => {
   if(!board.value[index]) {
     if(player.value)
@@ -55,11 +55,11 @@ const handleClick = (index: number) => {
 
     
     if(checkWin()) {
-      hasWinner.value = true
-      winner.value = player.value? "X" : "O"
+      scores.value[player.value? 'player1' : 'player2']++
+    } else {
+      hasWinner.value = false
     }
-    console.log(checkDraw())
-    if(checkDraw()) {
+    if(checkDraw() && !hasWinner.value) {
       winningCombination.value = Array.from({ length: 9 }, (_, i) => i)
       setTimeout(() => clearWinningCells(), 500)
     }
@@ -69,6 +69,14 @@ const handleClick = (index: number) => {
   }
 }
 
+const gameDecide = () => {
+  hasWinner.value = true
+
+  winner.value = scores.value.player1 > scores.value.player2  ? "X" : "O"
+}
+const stopGame = () => {
+  gameDecide()
+}
 const clearWinningCells = () => {
   winningCombination.value.forEach((index, i) => {
     setTimeout(() => {
@@ -125,6 +133,13 @@ const resetBoard = () => {
   winningCombination.value = []
 }
 
+const scoreFormat = computed(() => {
+  const player1 = '|'.repeat(scores.value.player1)
+  const player2 = '|'.repeat(scores.value.player2)
+  const players = [player1, player2]
+  return players
+})
+
 onMounted( () => {
   reverse()
 })
@@ -132,7 +147,7 @@ onMounted( () => {
 
 <template>
   <div class="min-h-screen flex flex-col items-center justify-center bg-slate-200">
-    <h1 ref="el" class="text-6xl font-bold text-center pb-1.5">Tik Tik Toe</h1>
+    <h1 ref="el" class="text-5xl font-bold text-center pb-1.5">Tik Tik Toe</h1>
     <ConfettiExplosion 
       v-if="hasWinner"
       :particleCount="300" 
@@ -160,7 +175,11 @@ onMounted( () => {
         </button>
       </div>
     </div>
-    <button @click="resetBoard" class="w-24 h-12 text-xl font-bold text-center mt-4">Reset</button>
+    <p v-for="(player, index) in scoreFormat">Player {{ index }}: {{player}}</p>
+    <div class="flex gap-4">
+      <button @click="resetBoard" class="text-xl font-bold text-center mt-4">Reset</button>
+      <button @click="stopGame" class="text-xl font-bold text-center mt-4">Stop</button>
+    </div>
     <p class="text-sm text-gray-600">@krobuncal</p>
   </div>
 </template>
