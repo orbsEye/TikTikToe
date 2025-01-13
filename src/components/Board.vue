@@ -3,19 +3,13 @@ import { ref, onMounted, computed } from 'vue'
 import type { MaybeElement } from '@vueuse/core'
 import { useAnimate } from '@vueuse/core'
 import ConfettiExplosion from "vue-confetti-explosion"
-import { reactive, shallowRef } from 'vue'
+import { shallowRef } from 'vue'
 
 const el = shallowRef<MaybeElement>()
 
 
 const {
-  reverse,
-  startTime,
-  currentTime,
-  playbackRate,
-  playState,
-  replaceState,
-  pending,
+  reverse
 } = useAnimate(
   el,
   [
@@ -30,15 +24,6 @@ const {
     easing: 'cubic-bezier(0.46, 0.03, 0.52, 0.96)',
   },
 )
-
-const text = JSON.stringify(reactive({
-  startTime,
-  currentTime,
-  playbackRate,
-  playState,
-  replaceState,
-  pending,
-}))
 
 const board = ref(Array(9).fill(null))
 const winningCombination = ref<number[]>([])
@@ -136,7 +121,7 @@ const resetBoard = () => {
 const scoreFormat = computed(() => {
   const player1 = '|'.repeat(scores.value.player1)
   const player2 = '|'.repeat(scores.value.player2)
-  const players = [player1, player2]
+  const players = [{player: '🍆', score: player1}, {player: '💦', score: player2}]
   return players
 })
 
@@ -175,7 +160,7 @@ onMounted( () => {
         </button>
       </div>
     </div>
-    <p v-for="(player, index) in scoreFormat">Player {{ index }}: {{player}}</p>
+    <p v-for="(player, index) in scoreFormat">Player {{ player.player }}: {{player.score}}</p>
     <div class="flex gap-4">
       <button @click="resetBoard" class="text-xl font-bold text-center mt-4">Reset</button>
       <button @click="stopGame" class="text-xl font-bold text-center mt-4">Stop</button>
