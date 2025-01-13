@@ -160,7 +160,7 @@ onMounted( () => {
         </button>
       </div>
     </div>
-    <p v-for="(player, index) in scoreFormat">Player {{ player.player }}: {{player.score}}</p>
+    <p v-for="(player, index) in scoreFormat" :key="index">Player {{ player.player }}: {{player.score}}</p>
     <div class="flex gap-4">
       <button @click="resetBoard" class="text-xl font-bold text-center mt-4">Reset</button>
       <button @click="stopGame" class="text-xl font-bold text-center mt-4">Stop</button>
